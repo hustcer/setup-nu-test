@@ -1,0 +1,59 @@
+
+name: Test nushell setup
+
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: false
+
+on:
+  push:
+    branches:
+      - fix/wf
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+
+# defaults:
+#   run:
+#     shell: nu {0}
+
+# permissions:
+#   id-token: write
+#   contents: read
+
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      # # https://github.com/marketplace/actions/setup-nu
+      #
+      - name: set up nushell
+        uses: hustcer/setup-nu@main
+        with:
+          enable-plugins: true
+          version: "0.95.0"
+
+      # # Google cloud login with federation/OIDC
+      # # https://github.com/marketplace/actions/authenticate-to-google-cloud
+      # #
+      # - id: auth
+      #   uses: google-github-actions/auth@v2
+      #   with:
+      #     project_id: azure-platform-prod-ec11
+      #     workload_identity_provider: "projects/484945419745/locations/global/workloadIdentityPools/github8/providers/azure-cost-data"
+
+      # # https://github.com/marketplace/actions/set-up-gcloud-cloud-sdk-environment
+      # #
+      # - name: set up cloud sdk
+      #   uses: google-github-actions/setup-gcloud@v2
+
+      # # run etl completion script
+      # #
+      # - name: create etl completion timestamp
+      #   run: ./etl_timestamp/load.nu
