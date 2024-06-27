@@ -31,5 +31,8 @@ jobs:
       - name: set up nushell
         uses: hustcer/setup-nu@develop
         with:
-          enable-plugins: true
+          # Use true to register all plugins
+          # enable-plugins: true
+          # Or register specified plugins by `,` separated string
+          enable-plugins: nu_plugin_inc,nu_plugin_polars,nu_plugin_query
           version: "0.95.0"
