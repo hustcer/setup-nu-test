@@ -36,3 +36,4 @@ jobs:
           # Or register specified plugins by `,` separated string
           enable-plugins: nu_plugin_inc,nu_plugin_polars,nu_plugin_query
           version: "0.95.0"
+      - run: print (version); print $"(char nl)Dir contents:(char nl)"; ls ((which nu).path.0 | path dirname)
