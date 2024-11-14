@@ -41,10 +41,10 @@ jobs:
       - shell: nu {0}
         run: |
           print (version); print $"(char nl)Dir contents:(char nl)"; ls ((which nu).path.0 | path dirname)
-          print $'TOKEN value: ($env.TOKEN | default empty)'
+          print $'TOKEN value: ($env.TOKEN? | default empty)'
       - run: |
           print $'Nu version info:(char nl)'; version
-          print $'TOKEN value: ($env.TOKEN)'
+          print $'TOKEN value: ($env.TOKEN?)'
         shell: nu {0}
         env:
           TOKEN: 'ABC'  # Pass the environment variable
