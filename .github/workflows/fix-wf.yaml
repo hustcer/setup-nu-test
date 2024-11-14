@@ -48,4 +48,6 @@ jobs:
         shell: nu {0}
         env:
           TOKEN: 'ABC'  # Pass the environment variable
+      - run: |
+          print $'TOKEN value: ($env.TOKEN? | default empty)'
 
