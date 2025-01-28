@@ -4,12 +4,6 @@
 # Usage:
 #   use source command to load it
 
-# If current host is Windows
-export def windows? [] {
-  # Windows / Darwin
-  (sys).host.name == 'Windows'
-}
-
 # Get the specified env key's value or ''
 export def 'get-env' [
   key: string       # The key to get it's env value

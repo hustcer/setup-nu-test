@@ -1,25 +1,32 @@
 
-name: Test nushell setup
+name: Test Nushell Modules
 
 on:
   push:
     branches:
-      - fix/wf
+      - master
     paths-ignore:
       - '**.md'
   workflow_dispatch:
 
-# defaults:
-#   run:
-#     shell: nu {0}
+defaults:
+  run:
+    shell: nu {0}
 
 # permissions:
 #   id-token: write
 #   contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  test-module:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-latest, windows-latest]
+        ver: [0.101.0, 0.98.0, 0.97.1, 0.96.1, 0.93.0, 0.92.2, 0.91.0, 0.90.1, 0.89.0, 0.86.0, 0.85.0, 0.83.1, 0.83.0]
+
+    runs-on: ${{ matrix.os }}
+    name: test (${{matrix.os}}, nu@${{matrix.ver}})
 
     steps:
       - name: check out repo
@@ -29,15 +36,21 @@ jobs:
 
       # https://github.com/marketplace/actions/setup-nu
       - name: set up nushell
-        uses: hustcer/setup-nu@develop
+        uses: hustcer/setup-nu@v3
         with:
           # Use true to register all plugins
           # enable-plugins: true
           # Or register specified plugins by `,` separated string
           enable-plugins: nu_plugin_inc,nu_plugin_polars,nu_plugin_query
-          version: "0.100.0"
+          version: ${{matrix.ver}}
         env:
           TOKEN: '100'
+      - name: Use Your Nu Modules by NU_LIB_DIRS Constant
+        run: |
+          const NU_LIB_DIRS = [ ${{ github.workspace }}/nu0 ]
+          use common.nu *
+          print 'Use module by NU_LIB_DIRS Constant'
+          print (get-env 'ABC-XYZ' 'DEFAULT-FROM-NU-LIB-DIRS-CONSTANT')
       - shell: nu {0}
         run: |
           print (version); print $"(char nl)Dir contents:(char nl)"; ls ((which nu).path.0 | path dirname)
@@ -45,7 +58,6 @@ jobs:
       - run: |
           print $'Nu version info:(char nl)'; version
           print $'TOKEN value: ($env.TOKEN?)'
-        shell: nu {0}
         env:
           TOKEN: 'ABC'  # Pass the environment variable
       - shell: nu {0}
