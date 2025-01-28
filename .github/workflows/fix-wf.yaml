@@ -51,6 +51,14 @@ jobs:
           use common.nu *
           print 'Use module by NU_LIB_DIRS Constant'
           print (get-env 'ABC-XYZ' 'DEFAULT-FROM-NU-LIB-DIRS-CONSTANT')
+      - name: Use Your Nu Modules
+        run: |
+          nu -c "use nu0/common.nu *; print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')"
+      - name: Use Your Nu Modules by Absolute Path
+        run: |
+          use ${{ github.workspace }}/nu0/common.nu *
+          print 'Use module from: ${{ github.workspace }}/nu0/common.nu'
+          print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ-ABSOLUTE-PATH')
       - shell: nu {0}
         run: |
           print (version); print $"(char nl)Dir contents:(char nl)"; ls ((which nu).path.0 | path dirname)
